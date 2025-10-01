@@ -2,14 +2,20 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
-const PORT = 3000;
+
+// Usar porta fornecida pelo Render, ou 3000 localmente
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(__dirname)); // serve o index.html da pasta atual
 
+// Servir arquivos estáticos da pasta atual (index.html, CSS, JS)
+app.use(express.static(path.join(__dirname)));
+
+// Endpoint para executar requisições
 app.post("/executar-requisicoes", async (req, res) => {
   const { metodo, endpoint, body, destinos } = req.body;
   const resultados = [];
@@ -46,6 +52,11 @@ app.post("/executar-requisicoes", async (req, res) => {
   res.json(resultados);
 });
 
+// Servir index.html para todas as rotas que não sejam a API
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando em ${PORT} (acessível em https://ferramenta-api.onrender.com)`);
 });
