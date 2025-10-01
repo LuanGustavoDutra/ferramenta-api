@@ -53,7 +53,7 @@ app.post("/executar-requisicoes", async (req, res) => {
 });
 
 // Servir index.html para todas as rotas que não sejam a API
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
